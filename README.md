@@ -4,11 +4,11 @@ to do
 
 als het gedaan is delete de zin
 
-HTTP Web Server Setup: Students are required to configure a HTTP(S) web server
+✅ HTTP Web Server Setup: Students are required to configure a HTTP(S) web server
 
-Dynamic Content with PHP: Implementation of dynamic behavior using PHP to handle server-side processing
+✅ Dynamic Content with PHP: Implementation of dynamic behavior using PHP to handle server-side processing
 
-Frontend Development: Creation of a basic frontend using HTML, CSS, and JavaScript
+✅ Frontend Development: Creation of a basic frontend using HTML, CSS, and JavaScript
 
 Database Integration and Security: Integration of a database with the application, and implementation of security measures to prevent SQL injections
 
