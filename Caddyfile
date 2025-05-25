@@ -1,8 +1,0 @@
-#best to use sudo systemctl start caddy not caddy run
-:80 {
-    root * /mnt/c/Users/Maciej/Desktop/PXL_2/WEBTECHNOLGIE/Group_Project_Webtechnologie
-    file_server
-    tls internal 
-}
-# Enable admin API on port 2019
-admin localhost:2019
