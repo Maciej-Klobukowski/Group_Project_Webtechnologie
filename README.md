@@ -19,3 +19,8 @@ Git/GitHub Integration and Teamwork: Utilization of Git for version control and 
 External Embedded Device Interaction: External embedded devices must interact with the server through a RESTful interface
 
 Documentation and Presentation: Comprehensive documentation outlining project structure and usage guidelines, along with a clear presentation highlighting key features and technical aspects of the project
+
+To start php:
+sudo systemctl start php8.3-fpm
+To run caddy:
+sudo caddy run --config /mnt/c/Users/Bram/Desktop/Webtechnologie/Group_Project_Webtechnologie/caddyfile --adapter caddyfile
