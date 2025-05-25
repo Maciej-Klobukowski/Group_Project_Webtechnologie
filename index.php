@@ -1,6 +1,36 @@
 <?php
 // Optioneel: zet hier je server tijdzone zodat PHP hetzelfde aanneemt als JavaScript
 date_default_timezone_set('Europe/Amsterdam');
+
+require_once 'router.php'; // jouw routercode
+require_once 'loadEnv.php'; // functie hierboven
+
+loadEnv(__DIR__ . '/.env');
+
+// Database-connectie
+$connectToPostgres = function () {
+    $dsn = "pgsql:host={$_ENV['DB_HOST']};port={$_ENV['DB_PORT']};dbname={$_ENV['DB_NAME']}";
+    return new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    ]);
+};
+
+// Route: GET /api/users
+get('/api/users', function () use ($connectToPostgres) {
+    try {
+        $pdo = $connectToPostgres();
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE active = :active");
+        $stmt->execute(['active' => true]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        header('Content-Type: application/json');
+        echo json_encode($results);
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+    }
+});
+
 ?>
 
 <!DOCTYPE html>
@@ -69,3 +99,4 @@ date_default_timezone_set('Europe/Amsterdam');
 
 </body>
 </html>
+    
