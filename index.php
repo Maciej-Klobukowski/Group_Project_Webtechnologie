@@ -1,102 +1,159 @@
 <?php
-// Optioneel: zet hier je server tijdzone zodat PHP hetzelfde aanneemt als JavaScript
+session_start();
 date_default_timezone_set('Europe/Amsterdam');
 
-require_once 'router.php'; // jouw routercode
-require_once 'loadEnv.php'; // functie hierboven
+// DATABASE GEGEVENS
+$dbHost = 'localhost';
+$dbPort = '5432';
+$dbName = 'webtechname';
+$dbUser = 'WebTechUser';
+$dbPassword = 'Abracadabra is a magic word! ;)';
 
-loadEnv(__DIR__ . '/.env');
+$errorMessage = '';
+$connectionError = '';
 
-// Database-connectie
-$connectToPostgres = function () {
-    $dsn = "pgsql:host={$_ENV['DB_HOST']};port={$_ENV['DB_PORT']};dbname={$_ENV['DB_NAME']}";
-    return new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], [
+try {
+    $dsn = "pgsql:host=$dbHost;port=$dbPort;dbname=$dbName";
+    $pdo = new PDO($dsn, $dbUser, $dbPassword, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     ]);
-};
+} catch (PDOException $e) {
+    // Niet technische foutmelding tonen
+    $connectionError = "Kan geen verbinding maken met de database, probeer later opnieuw.";
+}
 
-// Route: GET /api/users
-get('/api/users', function () use ($connectToPostgres) {
+// Alleen proberen inloggen als we succesvol met DB verbonden zijn en formulier is verzonden
+if (!$connectionError && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $inputUsername = $_POST['username'] ?? '';
+    $inputPassword = $_POST['password'] ?? '';
+
+    // Zoek gebruiker in database
     try {
-        $pdo = $connectToPostgres();
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE active = :active");
-        $stmt->execute(['active' => true]);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
+        $stmt->execute([':username' => $inputUsername]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        header('Content-Type: application/json');
-        echo json_encode($results);
-    } catch (Exception $e) {
-        http_response_code(500);
-        echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
+        if ($user && $user['password'] === $inputPassword) {
+            // Login succesvol
+            $_SESSION['username'] = $user['username'];
+        } else {
+            // Gebruiker of wachtwoord fout
+            $errorMessage = "Fout: probeer opnieuw.";
+        }
+    } catch (PDOException $e) {
+        $errorMessage = "Er is iets misgegaan, probeer opnieuw.";
     }
-});
-
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
-    <meta charset="UTF-8" />
-    <title>Countdown to Birthday</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-            background: #f0f0f0;
-            color: #333;
-        }
-        h2 {
-            font-weight: normal;
-            font-size: 1.8em;
-        }
-        #countdown {
-            font-size: 2.5em;
-            margin-top: 20px;
-            background: white;
-            display: inline-block;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-    </style>
+<meta charset="UTF-8" />
+<title>Login & Countdown</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f0f0f0;
+        color: #333;
+        text-align: center;
+        margin-top: 50px;
+    }
+    form {
+        background: white;
+        display: inline-block;
+        padding: 20px 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        max-width: 300px;
+    }
+    input[type="text"], input[type="password"] {
+        font-size: 1em;
+        padding: 8px;
+        margin: 8px 0;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+    input[type="submit"] {
+        font-size: 1em;
+        padding: 10px 20px;
+        background: #007BFF;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        margin-top: 10px;
+        width: 100%;
+    }
+    input[type="submit"]:hover {
+        background: #0056b3;
+    }
+    .error {
+        color: red;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    #countdown {
+        font-size: 2.5em;
+        margin-top: 20px;
+        background: white;
+        display: inline-block;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+        font-weight: normal;
+        font-size: 1.8em;
+    }
+</style>
 </head>
 <body>
 
-<h2>The birthday of the most important person ever is in ..</h2>
+<?php if ($connectionError): ?>
+    <div class="error"><?php echo htmlspecialchars($connectionError); ?></div>
+<?php elseif (isset($_SESSION['username'])): ?>
+    <h2>Welkom, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h2>
+    <h3>The birthday of the most important person ever is in ..</h3>
+    <div id="countdown">Loading...</div>
 
-<div id="countdown">Loading...</div>
-
-<script>
-    // Je verjaardag: oktober is maand 9 (0-based!)
-    const birthday = new Date(2025, 9, 5, 0, 0, 0);
-
-    function updateCountdown() {
-        const now = new Date();
-        const diff = birthday - now;
-
-        if (diff <= 0) {
-            document.getElementById('countdown').innerText = "Happy Birthday!";
-            clearInterval(timer);
-            return;
+    <script>
+        const birthday = new Date(2025, 9, 5, 0, 0, 0);
+        function updateCountdown() {
+            const now = new Date();
+            const diff = birthday - now;
+            if (diff <= 0) {
+                document.getElementById('countdown').innerText = "Happy Birthday!";
+                clearInterval(timer);
+                return;
+            }
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+            document.getElementById('countdown').innerText =
+                days + " days " +
+                hours + " hours " +
+                minutes + " minutes " +
+                seconds + " seconds";
         }
+        updateCountdown();
+        const timer = setInterval(updateCountdown, 1000);
+    </script>
 
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
-
-        document.getElementById('countdown').innerText =
-            days + " days " +
-            hours + " hours " +
-            minutes + " minutes " +
-            seconds + " seconds";
-    }
-
-    updateCountdown();
-    const timer = setInterval(updateCountdown, 1000);
-</script>
+<?php else: ?>
+    <h2>Inloggen</h2>
+    <form method="post" action="">
+        <input type="text" name="username" placeholder="Gebruikersnaam" required autofocus />
+        <input type="password" name="password" placeholder="Wachtwoord" required />
+        <input type="submit" value="Inloggen" />
+    </form>
+    <?php if ($errorMessage): ?>
+        <div class="error"><?php echo htmlspecialchars($errorMessage); ?></div>
+    <?php endif; ?>
+<?php endif; ?>
 
 </body>
 </html>
-    
