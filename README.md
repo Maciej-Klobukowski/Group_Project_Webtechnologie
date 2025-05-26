@@ -10,7 +10,9 @@ als het gedaan is delete de zin
 
 ✅ Frontend Development: Creation of a basic frontend using HTML, CSS, and JavaScript
 
-Database Integration and Security: Integration of a database with the application, and implementation of security measures to prevent SQL injections
+Database Integration and Security: Integration of a database with the application, and implementation of security measures to prevent SQL injections 
+
+//TRIED THAT ONE ^^ BUT GAVE UP AFTER 4 HOURS, FIX IT PLEASE!!!!! 
 
 RESTful Web Service: Design and implementation of a RESTful API to facilitate communication between the web application and its clients
 
