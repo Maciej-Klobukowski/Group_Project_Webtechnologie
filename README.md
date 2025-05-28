@@ -1,6 +1,7 @@
 # Group_Project_Webtechnologie
 
 To Do:
+
 ✅ HTTP Web Server Setup: Students are required to configure a HTTP(S) web server
 
 ✅ Dynamic Content with PHP: Implementation of dynamic behavior using PHP to handle server-side processing
