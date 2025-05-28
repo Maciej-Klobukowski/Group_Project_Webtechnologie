@@ -1,7 +1,13 @@
 const app = require('express')();
-const port = 8080
+const port = 8080;
 
-app.listen(
-    port,
-    () => console.log('its alive on http://localhost:${port}')
-)
+//req = incoming data res = outgoing data 
+app.get('/tshirt',(req,res) => {
+    res.status(200).send({
+        tshirt:'👕',
+        size:'large'
+    })
+    
+});
+
+
