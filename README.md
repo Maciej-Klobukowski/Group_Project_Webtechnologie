@@ -27,6 +27,7 @@ What do you need to install: (to see if its installed use: apt list --installed)
 
 To start php:
 -  sudo systemctl start php8.3-fpm
+  
 To run caddy:
 -  sudo caddy run --config /mnt/c/Users/Bram/Desktop/Webtechnologie/Group_Project_Webtechnologie/caddyfile --adapter caddyfile
 
