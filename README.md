@@ -100,9 +100,7 @@ How to do API's:
   - php -S localhost:8000
   
 3) Test RESTfull api to check if it work
- 
-  - curl -X POST http://<your-ip>:8000/login.php \
-  - H "Content-Type: application/json" \
-  - d '{"username":"admin","password":"wachtwoord"}'
-     
+
+curl -X POST http://localhost:8000/login.php \-H "Content-Type: application/json" \-d '{"username":"admin","password":"wachtwoord"}'
+
 4) That's it!!
