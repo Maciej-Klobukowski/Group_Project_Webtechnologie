@@ -88,7 +88,7 @@ How did i make a user for the SQL login?
 How to do API's:
 
 1)instal node modules
- 
+  - sudo apt install npm
   - npm init
 
 2)RESTfull api to localhost:8000
