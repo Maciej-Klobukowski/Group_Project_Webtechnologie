@@ -83,16 +83,17 @@ How did i make a user for the SQL login?
     
 13) Usernames en passwoorden zien:
   - SELECT * FROM users;
-    
-14)instal node modules
-  -npm init
 
-15)RESTfull api to localhost:8000
-  -php -S localhost:8000
+How to do API's:
+1)instal node modules
+  - npm init
+
+2)RESTfull api to localhost:8000
+  - php -S localhost:8000
   
-16)Test RESTfull api to check if it work
-  -curl -X POST http://<your-ip>:8000/login.php \
-     -H "Content-Type: application/json" \
-     -d '{"username":"admin","password":"wachtwoord"}'
+3)Test RESTfull api to check if it work
+  - curl -X POST http://<your-ip>:8000/login.php \
+  - H "Content-Type: application/json" \
+  - d '{"username":"admin","password":"wachtwoord"}'
      
-17) That's it!!
+4) That's it!!
