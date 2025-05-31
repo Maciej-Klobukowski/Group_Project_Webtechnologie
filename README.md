@@ -87,15 +87,18 @@ How did i make a user for the SQL login?
 
 How to do API's:
 
-1)instal node modules
+1) instal node modules
   - sudo apt install npm
   - npm init
 
-2)RESTfull api to localhost:8000
+
+2) If it asks for stuff just press enter till your trough
+
+3) RESTfull api to localhost:8000
   
   - php -S localhost:8000
   
-3)Test RESTfull api to check if it work
+3) Test RESTfull api to check if it work
  
   - curl -X POST http://<your-ip>:8000/login.php \
   - H "Content-Type: application/json" \
