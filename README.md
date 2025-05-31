@@ -37,23 +37,31 @@ To run caddy:
 
 How did i make a user for the SQL login?
 1) Open Ubuntu:
+   
 2) Download postgresql:
   - sudo apt update
   - sudo apt install postgresql postgresql-contrib php-pgsql
+    
 3) Start postgresql:
   - sudo systemctl start postgresql
+    
 4) Lijst van rollen zien:
   - sudo -u postgres psql
   - du
+    
 5) Rol creëren:
   - sudo -u postgres psql (of staat al open als er postgres=# staat)
   - CREATE USER "WebTechUser" WITH PASSWORD 'Abracadabra is a magic word! ;)';
+    
 6) Database creëren:
   - CREATE DATABASE WebTechName;
+    
 7) Machtigingen geven:
   - GRANT ALL PRIVILEGES ON DATABASE WebTechName TO "WebTechUser";
+    
 8) User creëren:
   - psql -h localhost -U WebTechUser -d webtechname;  (passwoord is: 'Abracadabra is a magic word! ;)')
+    
 9) Toestemmingen geven:
   - GRANT CREATE ON SCHEMA public TO "WebTechUser";
   - GRANT USAGE ON SCHEMA public TO "WebTechUser";
@@ -61,6 +69,7 @@ How did i make a user for the SQL login?
   - ALTER SCHEMA public OWNER TO "WebTechUser";
   - GRANT ALL ON SCHEMA public TO "WebTechUser";
   - ALTER DATABASE webtechname OWNER TO "WebTechUser";
+    
 10) table creëren:
   - typ in achter webtechname=> dat er normaal staat nu.
   - CREATE TABLE users (
@@ -68,16 +77,22 @@ How did i make a user for the SQL login?
     username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL
     );
+    
 11) Username en passwoord instellen:
   - INSERT INTO users (username, password) VALUES ('admin', 'wachtwoord');
-12) Usernames en passwoorden zien:
+    
+13) Usernames en passwoorden zien:
   - SELECT * FROM users;
-12)instal node modules
+    
+14)instal node modules
   -npm init
-13)RESTfull api to localhost:8000
+
+15)RESTfull api to localhost:8000
   -php -S localhost:8000
-13)Test RESTfull api to check if it work
+  
+16)Test RESTfull api to check if it work
   -curl -X POST http://<your-ip>:8000/login.php \
      -H "Content-Type: application/json" \
      -d '{"username":"admin","password":"wachtwoord"}'
-13) That's it!!
+     
+17) That's it!!
