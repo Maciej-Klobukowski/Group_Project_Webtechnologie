@@ -95,7 +95,8 @@ How to do API's:
 2) If it asks for stuff just press enter till your trough
 
 3) RESTfull api to localhost:8000
-  
+  - ls
+  - cd api
   - php -S localhost:8000
   
 3) Test RESTfull api to check if it work
