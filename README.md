@@ -10,9 +10,9 @@ To Do:
 
 ✅ Database Integration and Security: Integration of a database with the application, and implementation of security measures to prevent SQL injections 
 
-❌ RESTful Web Service: Design and implementation of a RESTful API to facilitate communication between the web application and its clients
+✅ RESTful Web Service: Design and implementation of a RESTful API to facilitate communication between the web application and its clients
 
-❌ Git/GitHub Integration and Teamwork: Utilization of Git for version control and collaboration through GitHub, demonstrating effective teamwork and regular commits to showcase project progress
+✅ Git/GitHub Integration and Teamwork: Utilization of Git for version control and collaboration through GitHub, demonstrating effective teamwork and regular commits to showcase project progress
 
 ❌ External Embedded Device Interaction: External embedded devices must interact with the server through a RESTful interface
 
@@ -24,6 +24,8 @@ What do you need to install: (to see if its installed use: apt list --installed)
 -  caddy
 -  postgresql postgresql-contrib php-pgsql
 -  net-tools
+-  sudo apt update
+-  sudo apt install apache2 php php-pgsql
 
 To start php:
 -  sudo systemctl start php8.3-fpm
@@ -70,4 +72,12 @@ How did i make a user for the SQL login?
   - INSERT INTO users (username, password) VALUES ('admin', 'wachtwoord');
 12) Usernames en passwoorden zien:
   - SELECT * FROM users;
+12)instal node modules
+  -npm init
+13)RESTfull api to localhost:8000
+  -php -S localhost:8000
+13)Test RESTfull api to check if it work
+  -curl -X POST http://<your-ip>:8000/login.php \
+     -H "Content-Type: application/json" \
+     -d '{"username":"admin","password":"wachtwoord"}'
 13) That's it!!
