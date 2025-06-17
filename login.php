@@ -3,74 +3,64 @@ session_start();
 header('Content-Type: application/json');
 date_default_timezone_set('Europe/Amsterdam');
 
-// Database config
+// Databaseconfig
 $dbHost = 'localhost';
 $dbPort = '5432';
 $dbName = 'webtechname';
 $dbUser = 'WebTechUser';
 $dbPassword = 'Abracadabra is a magic word! ;)';
 
-// Verbinding maken
+// Alleen POST-methode
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['error' => 'Alleen POST toegestaan.']);
+    exit;
+}
+
+// JSON inlezen
+$input = json_decode(file_get_contents('php://input'), true);
+if (!$input || empty($input['username']) || empty($input['password'])) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Gebruikersnaam en wachtwoord zijn vereist.']);
+    exit;
+}
+
+// Verbinding maken met database
 try {
-    $dsn = "pgsql:host=$dbHost;port=$dbPort;dbname=$dbName";
-    $pdo = new PDO($dsn, $dbUser, $dbPassword, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    $pdo = new PDO("pgsql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPassword, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(['error' => 'Kan geen verbinding maken met database.']);
+    echo json_encode(['error' => 'Databaseconnectie mislukt.']);
     exit;
 }
 
-// Alleen POST requests toestaan
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Alleen POST methode toegestaan.']);
-    exit;
-}
-
-// JSON input lezen
-$input = json_decode(file_get_contents('php://input'), true);
-
-if (!$input || empty($input['username']) || empty($input['password'])) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Geldige gebruikersnaam en wachtwoord vereist.']);
-    exit;
-}
-
-$username = $input['username'];
-$password = $input['password'];
-
-// User ophalen uit DB
+// Gebruiker zoeken
 try {
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE username = :username');
-    $stmt->execute([':username' => $username]);
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
+    $stmt->execute([':username' => $input['username']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$user) {
+    if (!$user || $user['password'] !== $input['password']) {
         http_response_code(401);
         echo json_encode(['error' => 'Ongeldige gebruikersnaam of wachtwoord.']);
         exit;
     }
 
-    // Wachtwoord check (pas aan als je hashes gebruikt)
-    if ($user['password'] !== $password) {
-        http_response_code(401);
-        echo json_encode(['error' => 'Ongeldige gebruikersnaam of wachtwoord.']);
-        exit;
-    }
-
-    // Login succesvol, sessie opslaan
+    // Sessie starten
     $_SESSION['username'] = $user['username'];
 
     echo json_encode([
-        'message' => 'Login succesvol',
+        'message' => 'Login succesvol.',
         'username' => $user['username']
     ]);
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(['error' => 'Fout bij het verwerken van login.']);
+    echo json_encode(['error' => 'Login mislukt.']);
+    exit;
 }
+
 /*
 🔁 How It Works Step-by-Step
 User submits login form on your website.
@@ -91,4 +81,3 @@ The PHP script starts a session and sends back a JSON response.
 
 Your frontend can use that response to, for example, redirect the user or show a success message.
 */
-

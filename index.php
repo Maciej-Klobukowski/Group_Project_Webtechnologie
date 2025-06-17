@@ -39,30 +39,46 @@ if (!$connectionError && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $errorMessage = "Er is iets misgegaan, probeer opnieuw.";
     }
 }
+
+// Als ingelogd, sensor data ophalen
+if (!$connectionError && isset($_SESSION['username'])) {
+    try {
+        $stmt = $pdo->query("SELECT temperature, humidity, timestamp FROM sensor_data ORDER BY timestamp DESC LIMIT 1");
+        $sensorData = $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+     
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="nl">
 <head>
 <meta charset="UTF-8" />
-<title>Login & Countdown</title>
+<title>Login & Sensor Data + Countdown</title>
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background: #f0f0f0;
-        color: #333;
-        text-align: center;
-        margin-top: 50px;
-    }
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    text-align: center;
+}
 
-    form {
-        background: white;
-        display: inline-block;
-        padding: 20px 30px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        max-width: 300px;
-    }
+form {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 320px;
+}
+
 
     input[type="text"], input[type="password"] {
         font-size: 1.1em;
@@ -138,6 +154,17 @@ if (!$connectionError && $_SERVER['REQUEST_METHOD'] === 'POST') {
         border-top: 2px solid #ccc;
         border-radius: 1px;
     }
+
+    .sensor-box {
+        max-width: 320px;
+        margin: 20px auto 40px;
+        background: #f0f8ff;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        font-family: Arial, sans-serif;
+    }
 </style>
 </head>
 <body>
@@ -153,6 +180,17 @@ if (!$connectionError && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="timer-box" id="countup">Loading...</div>
     <p class="since-text">Since Timo's bank account was taken over by airsoft.</p>
+
+<div class="sensor-box">
+    <h2>Lokaal Sensor Data</h2>
+    <?php if ($sensorData): ?>
+        <p>Temperatuur: <strong><?php echo htmlspecialchars($sensorData['temperature']); ?> °C</strong></p>
+        <p>Vochtigheid: <strong><?php echo htmlspecialchars($sensorData['humidity']); ?> %</strong></p>
+        <p><small>Laatste update: <?php echo htmlspecialchars($sensorData['timestamp']); ?></small></p>
+    <?php else: ?>
+        <p style="color:red; font-weight:bold;">⚠️ Geen sensor data beschikbaar in de database.</p>
+    <?php endif; ?>
+</div>
 
     <script>
         // Countdown to birthday
@@ -197,6 +235,8 @@ if (!$connectionError && $_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         updateCountup();
         setInterval(updateCountup, 1000);
+
+    </script>
     </script>
 
 <?php else: ?>
