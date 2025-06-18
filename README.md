@@ -16,11 +16,11 @@ Hier is een overzicht van de voltooide en nog openstaande taken:
 * **Database Integratie & Beveiliging**: Integratie van een database inclusief beveiligingsmaatregelen om **SQL injecties** te voorkomen.
 * **RESTful Web Service**: Ontwerp en implementatie van een **RESTful API** voor naadloze communicatie tussen de webapplicatie en clients.
 * **Git/GitHub Integratie & Teamwork**: Effectieve samenwerking via **Git** en **GitHub**, met regelmatige commits die de projectvoortgang weerspiegelen.
-
-### ❌ Nog te doen
+* **Documentatie & Presentatie**: Uitgebreide projectdocumentatie en een heldere presentatie van de belangrijkste kenmerken en technische aspecten.
+  
+### ❌ Half Gelukt
 
 * **Interactie met Externe Embedded Apparaten**: Implementatie van interactie tussen externe embedded apparaten en de server via een RESTful interface.
-* **Documentatie & Presentatie**: Uitgebreide projectdocumentatie en een heldere presentatie van de belangrijkste kenmerken en technische aspecten.
 
 ---
 
