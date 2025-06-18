@@ -2,42 +2,16 @@
 session_start();
 date_default_timezone_set('Europe/Amsterdam');
 
-// DATABASE GEGEVENS
-$dbHost = 'localhost';
-$dbPort = '5432';
-$dbName = 'webtechname';
-$dbUser = 'WebTechUser';
-$dbPassword = 'Abracadabra is a magic word! ;)';
-
-$errorMessage = '';
 $connectionError = '';
-
 try {
-    $dsn = "pgsql:host=$dbHost;port=$dbPort;dbname=$dbName";
-    $pdo = new PDO($dsn, $dbUser, $dbPassword, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    ]);
+    $pdo = new PDO(
+        "pgsql:host=localhost;port=5432;dbname=webtechname",
+        'WebTechUser',
+        'Abracadabra is a magic word! ;)',
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
 } catch (PDOException $e) {
     $connectionError = "Kan geen verbinding maken met de database, probeer later opnieuw.";
-}
-
-if (!$connectionError && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $inputUsername = $_POST['username'] ?? '';
-    $inputPassword = $_POST['password'] ?? '';
-
-    try {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
-        $stmt->execute([':username' => $inputUsername]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($user && $user['password'] === $inputPassword) {
-            $_SESSION['username'] = $user['username'];
-        } else {
-            $errorMessage = "Fout: probeer opnieuw.";
-        }
-    } catch (PDOException $e) {
-        $errorMessage = "Er is iets misgegaan, probeer opnieuw.";
-    }
 }
 
 // Als ingelogd, sensor data ophalen
