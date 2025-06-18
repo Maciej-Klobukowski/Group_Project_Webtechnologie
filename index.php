@@ -158,7 +158,7 @@ h3, .since-text {
     <div class="divider"></div>
 
     <div class="sensor-box">
-        <h2>Lokaal Sensor Data</h2>
+        <h2>Maciej zijn kamertemperatuur & vochtigheid:</h2>
         <?php if ($sensorData): ?>
             <p>Temperatuur: <strong><?php echo htmlspecialchars($sensorData['temperature']); ?> °C</strong></p>
             <p>Vochtigheid: <strong><?php echo htmlspecialchars($sensorData['humidity']); ?> %</strong></p>
@@ -226,5 +226,36 @@ h3, .since-text {
     <?php endif; ?>
 <?php endif; ?>
 
+  <div class="divider"></div>
+
+    <h3>Hier zie je onze droomauto:</h3>
+    <div style="font-size: 1.3em; line-height: 1.4; margin-top: -10px;">
+        <p style="margin: 5px 0;">Howjoh zo mooi is hij gloednieuw?</p>
+        <p style="margin: 5px 0;">Nee gisteren enorm goed gepoetst!</p>
+    </div>
+
+    <br>
+
+    <?php
+        $imagePath = 'uploads/droomauto.png'; // Pad naar je afbeelding
+        if (file_exists($imagePath)) {
+            echo "<img src=\"$imagePath\" alt=\"Droomauto\" style=\"width: 35%; height: auto; margin-top: 10px;\">";
+            echo '<div class="divider"></div>';
+            echo '<h3 style="margin-bottom: 5px;">Mijn Favoriete Band:</h3>';
+            echo '<p style="font-size: 0.9em; color: #666; margin-top: 0;">(No Joke echt nice)</p>';
+            echo "<img src=\"uploads/band.png\" alt=\"Favoriete band\" style=\"width: 35%; height: auto; margin-top: 10px;\">";
+
+
+            echo '<div class="divider"></div>';
+            echo '<h3 style="margin-bottom: 15px;">Hier nog wat foto\'s van onze mascotte (BOBBER)</h3>';
+            echo '<div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">';
+            echo '<img src="uploads/bobber1.png" alt="Bobber 1" style="width: 200px; height: auto;">';
+            echo '<img src="uploads/bobber2.png" alt="Bobber 2" style="width: 200px; height: auto;">';
+            echo '</div>';
+            echo '<div class="divider"></div>';
+        } else {
+            echo "<p style='color: red; font-weight: bold;'>⚠️ Afbeelding 'droomauto.png' niet gevonden in map /uploads/</p>";
+        }
+    ?>
 </body>
 </html>
