@@ -1,5 +1,3 @@
-Markdown
-
 # 🌐 Webtechnologie Groepsproject
 
 Welkom bij het Webtechnologie Groepsproject! Dit project omvat de ontwikkeling van een webapplicatie met diverse moderne webtechnologieën.
