@@ -53,92 +53,91 @@ form {
     max-width: 320px;
 }
 
+input[type="text"], input[type="password"] {
+    font-size: 1.1em;
+    padding: 10px;
+    margin: 10px 0;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
 
-    input[type="text"], input[type="password"] {
-        font-size: 1.1em;
-        padding: 10px;
-        margin: 10px 0;
-        width: 100%;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-    }
+input[type="submit"] {
+    font-size: 1.1em;
+    padding: 10px 20px;
+    background: #007BFF;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+}
 
-    input[type="submit"] {
-        font-size: 1.1em;
-        padding: 10px 20px;
-        background: #007BFF;
-        border: none;
-        border-radius: 5px;
-        color: white;
-        cursor: pointer;
-        margin-top: 10px;
-        width: 100%;
-    }
+input[type="submit"]:hover {
+    background: #0056b3;
+}
 
-    input[type="submit"]:hover {
-        background: #0056b3;
-    }
+.error {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
 
-    .error {
-        color: red;
-        font-weight: bold;
-        margin-top: 10px;
-    }
+h2 {
+    font-size: 2em;
+    font-weight: normal;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+}
 
-    h2 {
-        font-size: 2em;
-        font-weight: normal;
-        position: relative;
-        display: inline-block;
-        padding-bottom: 10px;
-    }
+h2::after {
+    content: "";
+    display: block;
+    height: 3px;
+    width: 80%;
+    background: #007BFF;
+    margin: 0 auto;
+    margin-top: 10px;
+    border-radius: 2px;
+}
 
-    h2::after {
-        content: "";
-        display: block;
-        height: 3px;
-        width: 80%;
-        background: #007BFF;
-        margin: 0 auto;
-        margin-top: 10px;
-        border-radius: 2px;
-    }
+h3, .since-text {
+    font-size: 1.8em;
+    font-weight: normal;
+    color: #555;
+    margin-bottom: 20px;
+}
 
-    h3, .since-text {
-        font-size: 1.8em;
-        font-weight: normal;
-        color: #555;
-        margin-bottom: 20px;
-    }
+.timer-box {
+    font-size: 2.2em;
+    margin: 30px auto;
+    background: white;
+    display: inline-block;
+    padding: 25px 35px;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
 
-    .timer-box {
-        font-size: 2.2em;
-        margin: 30px auto;
-        background: white;
-        display: inline-block;
-        padding: 25px 35px;
-        border-radius: 15px;
-        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    }
+.divider {
+    margin: 50px auto 20px;
+    width: 60%;
+    border-top: 2px solid #ccc;
+    border-radius: 1px;
+}
 
-    .divider {
-        margin: 50px auto 20px;
-        width: 60%;
-        border-top: 2px solid #ccc;
-        border-radius: 1px;
-    }
-
-    .sensor-box {
-        max-width: 320px;
-        margin: 20px auto 40px;
-        background: #f0f8ff;
-        border-radius: 10px;
-        padding: 20px;
-        text-align: center;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        font-family: Arial, sans-serif;
-    }
+.sensor-box {
+    max-width: 320px;
+    margin: 20px auto 40px;
+    background: #f0f8ff;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+}
 </style>
 </head>
 <body>
@@ -155,16 +154,19 @@ form {
     <div class="timer-box" id="countup">Loading...</div>
     <p class="since-text">Since Timo's bank account was taken over by airsoft.</p>
 
-<div class="sensor-box">
-    <h2>Lokaal Sensor Data</h2>
-    <?php if ($sensorData): ?>
-        <p>Temperatuur: <strong><?php echo htmlspecialchars($sensorData['temperature']); ?> °C</strong></p>
-        <p>Vochtigheid: <strong><?php echo htmlspecialchars($sensorData['humidity']); ?> %</strong></p>
-        <p><small>Laatste update: <?php echo htmlspecialchars($sensorData['timestamp']); ?></small></p>
-    <?php else: ?>
-        <p style="color:red; font-weight:bold;">⚠️ Geen sensor data beschikbaar in de database.</p>
-    <?php endif; ?>
-</div>
+    <!-- ✅ Nieuw toegevoegde lijn -->
+    <div class="divider"></div>
+
+    <div class="sensor-box">
+        <h2>Lokaal Sensor Data</h2>
+        <?php if ($sensorData): ?>
+            <p>Temperatuur: <strong><?php echo htmlspecialchars($sensorData['temperature']); ?> °C</strong></p>
+            <p>Vochtigheid: <strong><?php echo htmlspecialchars($sensorData['humidity']); ?> %</strong></p>
+            <p><small>Laatste update: <?php echo htmlspecialchars($sensorData['timestamp']); ?></small></p>
+        <?php else: ?>
+            <p style="color:red; font-weight:bold;">⚠️ Geen sensor data beschikbaar in de database.</p>
+        <?php endif; ?>
+    </div>
 
     <script>
         // Countdown to birthday
@@ -210,7 +212,6 @@ form {
         updateCountup();
         setInterval(updateCountup, 1000);
 
-    </script>
     </script>
 
 <?php else: ?>
