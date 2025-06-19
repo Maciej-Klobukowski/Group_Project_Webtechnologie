@@ -1,0 +1,98 @@
+//this code is for esp not webserver itself
+
+#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include "DHT.h"
+
+#define DHTPIN 4       // GPIO waar DHT sensor op zit
+#define DHTTYPE DHT11  // DHT11 sensor
+
+const char* ssid = "telenet-366E5";
+const char* password = "uppPknZkmy2p";
+
+const char* serverUrl = "http://192.168.0.231:8001/sensor.php"; // IP + endpoint van je PHP API
+
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  Serial.begin(115200);
+  dht.begin();
+
+  Serial.println();
+  Serial.println("Verbinden met WiFi...");
+  WiFi.begin(ssid, password);
+  Serial.print("ESP IP address: ");
+  Serial.println(WiFi.localIP());
+
+  int retries = 0;
+  while (WiFi.status() != WL_CONNECTED && retries < 30) { // max 15 seconden wachten
+    delay(500);
+    Serial.print(".");
+    retries++;
+  }
+
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("\nVerbonden!");
+    Serial.print("IP-adres ESP: ");
+    Serial.println(WiFi.localIP());
+  } else {
+    Serial.println("\nKon geen verbinding maken met WiFi.");
+  }
+}
+
+void loop() {
+  if (WiFi.status() == WL_CONNECTED) {
+    float temp = dht.readTemperature();
+    float hum = dht.readHumidity();
+
+    if (isnan(temp) || isnan(hum)) {
+      Serial.println("Sensor fout: Geen valide metingen.");
+      delay(5000); // even wachten om te voorkomen dat dit te snel blijft
+      return;
+    }
+
+    Serial.print("Gemeten temperatuur: ");
+    Serial.print(temp);
+    Serial.println(" °C");
+    Serial.print("Gemeten vochtigheid: ");
+    Serial.print(hum);
+    Serial.println(" %");
+
+    WiFiClient client;
+    HTTPClient http;
+
+    Serial.print("Verbinden met server: ");
+    Serial.println(serverUrl);
+
+    if (http.begin(client, serverUrl)) {
+      http.addHeader("Content-Type", "application/json");
+
+      String json = "{\"temperature\":" + String(temp, 2) + ",\"humidity\":" + String(hum, 2) + "}";
+      Serial.print("Versturen JSON: ");
+      Serial.println(json);
+
+      int httpCode = http.POST(json);
+
+      Serial.print("HTTP response code: ");
+      Serial.println(httpCode);
+
+      if (httpCode > 0) {
+        String payload = http.getString();
+        Serial.print("Server response: ");
+        Serial.println(payload);
+      } else {
+        Serial.print("Fout bij verzenden: ");
+        Serial.println(http.errorToString(httpCode));
+      }
+
+      http.end();
+    } else {
+      Serial.println("Kan geen verbinding maken met de server.");
+    }
+
+  } else {
+    Serial.println("Geen WiFi verbinding");
+  }
+
+  delay(5000);  // wacht 5 seconden tussen metingen om minder spam
+}
